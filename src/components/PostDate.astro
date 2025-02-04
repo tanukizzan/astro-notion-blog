@@ -10,12 +10,25 @@ const { post } = Astro.props
 ---
 
 <div class="post-date">
-  {post.Date ? getDateStr(post.Date) : ''}
+  <svg xmlns="http://www.w3.org/2000/svg" width="1.2rem" height="auto" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10s10-4.5 10-10S17.5 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8s8 3.59 8 8s-3.59 8-8 8m.5-13H11v6l5.2 3.2l.8-1.3l-4.5-2.7z"/></svg>
+  {post.Date ? <span>{getDateStr(post.Date)}</span> : ''}
 </div>
 
 <style>
   .post-date {
-    padding: 0 0 0.3rem;
-    font-size: 0.9rem;
+    padding: 0 0.75rem 0 0;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+  }
+  .post-date svg {
+    margin-right: 0.25rem;
+  }
+  .material-symbols-outlined {
+    font-variation-settings:
+      'FILL' 0,
+      'wght' 400,
+      'GRAD' 0,
+      'opsz' 24;
   }
 </style>

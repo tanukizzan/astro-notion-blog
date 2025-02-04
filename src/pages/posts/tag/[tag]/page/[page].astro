@@ -9,6 +9,7 @@ import {
 import Layout from '../../../../../layouts/Layout.astro'
 import NoContents from '../../../../../components/NoContents.astro'
 import PostDate from '../../../../../components/PostDate.astro'
+import PostUpdateDate from '../../../../../components/PostUpdateDate.astro'
 import PostTags from '../../../../../components/PostTags.astro'
 import PostTitle from '../../../../../components/PostTitle.astro'
 import PostFeaturedImage from '../../../../../components/PostFeaturedImage.astro'
@@ -40,7 +41,7 @@ export async function getStaticPaths() {
 
 const { tag, page } = Astro.params
 
-const [posts, rankedPosts, tags, numberOfPages] = await Promise.all([
+const [posts, rankedPosts, recentPosts, tags, numberOfPages] = await Promise.all([
   getPostsByTagAndPage(tag, parseInt(page, 10)),
   getRankedPosts(),
   getAllTags(),
@@ -68,10 +69,13 @@ const currentTag = posts[0].Tags.find((t) => t.name === tag)
       ) : (
         posts.map((post) => (
           <div class={styles.post} key={post.Slug}>
-            <PostDate post={post} />
-            <PostTags post={post} />
-            <PostTitle post={post} />
             <PostFeaturedImage post={post} />
+            <PostTitle post={post} />
+            <div class="datetags">
+              <PostDate post={post} />
+              <PostUpdateDate post={post} />
+              <PostTags post={post} />
+            </div>
             <PostExcerpt post={post} />
             <ReadMoreLink post={post} />
           </div>
@@ -89,8 +93,9 @@ const currentTag = posts[0].Tags.find((t) => t.name === tag)
   </div>
 
   <div slot="aside" class={styles.aside}>
-    <BlogPostsLink heading="Recommended" posts={rankedPosts} />
-    <BlogTagsLink heading="Categories" tags={tags} />
+    <BlogPostsLink heading="おすすめ記事" posts={rankedPosts} />
+    <BlogPostsLink heading="最近の記事" posts={recentPosts} />
+    <BlogTagsLink heading="カテゴリ" tags={tags} />
   </div>
 </Layout>
 
