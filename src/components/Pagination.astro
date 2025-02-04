@@ -23,7 +23,7 @@ for (let i = startPage; i <= endPage; i++) {
 ---
 
 <div class="pagination">
-  <a href={getPageLink(1, tag)} class={isFirstPage && 'inactive'}>&lt;&lt;</a>
+  <a href={getPageLink(1, tag)} class={isFirstPage && 'inactive-arrow'}>&lt;&lt;</a>
   {
     pages.map((p: number) => (
       <a href={getPageLink(p, tag)} class={p === currentPage && 'inactive'}>
@@ -31,7 +31,7 @@ for (let i = startPage; i <= endPage; i++) {
       </a>
     ))
   }
-  <a href={getPageLink(numberOfPages, tag)} class={isLastPage && 'inactive'}
+  <a href={getPageLink(numberOfPages, tag)} class={isLastPage && 'inactive-arrow'}
     >&gt;&gt;</a
   >
 </div>
@@ -53,17 +53,19 @@ for (let i = startPage; i <= endPage; i++) {
     border-radius: 50%;
     background: var(--bg);
     color: inherit;
-    font-size: 0.85rem;
+    font-size: 1rem;
     text-align: center;
     text-decoration: underline;
     font-weight: 500;
     line-height: 3rem;
+    transition: .2s;
+    text-decoration: none;
   }
   .pagination a:hover:not(.inactive) {
     background: #ddd;
   }
   .pagination a.inactive {
-    color: #333;
-    text-decoration: none;
+    background-color: #333;
+    color: #fafafa;
   }
 </style>

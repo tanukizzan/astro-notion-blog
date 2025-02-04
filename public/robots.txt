@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://https://astro-notion-blog-7ze.pages.dev/sitemap.xml
+Sitemap: https://blog.tanukizzan.com/sitemap.xml
