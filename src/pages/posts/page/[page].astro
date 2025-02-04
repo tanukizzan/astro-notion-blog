@@ -73,7 +73,7 @@ const [posts, numberOfPages] = await Promise.all([
 
 <style>
   header {
-    margin-bottom: 1rem;
+    padding-bottom: 2rem;
   }
   .page-container {
     margin: 0;
@@ -82,9 +82,14 @@ const [posts, numberOfPages] = await Promise.all([
     font-weight: normal;
     text-align: center;
   }
-  @media (max-width: 640px) {
+  @media (max-width: 720px) {
     .page-container {
       font-size: 1rem;
+    }
+  }
+  @media (max-width: 550px) {
+    header {
+      padding-top: 2rem;
     }
   }
   

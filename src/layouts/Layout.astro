@@ -305,10 +305,15 @@ if (database.Icon && database.Icon.Type === 'file') {
   body {
     padding: 0;
     margin: 0;
-    font-size: 18px;
-    line-height: 2;
+    font-size: 16px;
+    line-height: 1.8;
   }
-
+  @media (min-width: 720px) {
+    html,
+    body {
+      font-size: 18px;
+    }
+  }
   body {
     min-height: 100vh;
     background: var(--bg);

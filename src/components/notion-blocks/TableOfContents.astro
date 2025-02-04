@@ -19,11 +19,9 @@ const { block, headings } = Astro.props
         headingBlock.Heading1 || headingBlock.Heading2 || headingBlock.Heading3
 
       let indentClass = ''
-      if (headingBlock.Type === 'heading_2') {
+      if (headingBlock.Type === 'heading_3') {
         indentClass = 'indent-1'
-      } else if (headingBlock.Type === 'heading_3') {
-        indentClass = 'indent-2'
-      }
+      } 
 
       return (
         <a
