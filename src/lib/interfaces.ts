@@ -6,6 +6,7 @@ export interface Database {
 }
 
 export interface Post {
+  UpdateDate: string
   PageId: string
   Title: string
   Icon: FileObject | Emoji | null

@@ -12,7 +12,7 @@ const { post, enableLink = true } = Astro.props
 ---
 
 <div class="post-tags">
-  {
+  <svg xmlns="http://www.w3.org/2000/svg" width="1.4rem" height="auto" viewBox="0 0 24 24"><path fill="currentColor" d="M17.63 5.84C17.27 5.33 16.67 5 16 5L5 5.01C3.9 5.01 3 5.9 3 7v10c0 1.1.9 1.99 2 1.99L16 19c.67 0 1.27-.33 1.63-.84L22 12zM16 17H5V7h11l3.55 5z"/></svg>  {
     post.Tags &&
       post.Tags.length > 0 &&
       post.Tags.map((tag: SelectProperty) => {
@@ -31,13 +31,14 @@ const { post, enableLink = true } = Astro.props
 <style>
   .post-tags {
     font-size: 0.9rem;
-    display: flex;
+    display: inline-flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 6px;
   }
   .post-tags a,
   .post-tags span {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     flex-shrink: 1;
     min-width: 0;

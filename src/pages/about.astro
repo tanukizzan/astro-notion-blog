@@ -1,0 +1,70 @@
+---
+import * as interfaces from '../lib/interfaces.ts'
+import {
+  getPosts,
+  getAllPosts,
+  getRankedPosts,
+  getPostBySlug,
+  getPostsByTag,
+  getAllTags,
+  getAllBlocksByBlockId,
+} from '../lib/notion/client.ts'
+import {
+  getPostLink,
+  filePath,
+} from '../lib/blog-helpers.ts'
+import Layout from '../layouts/Layout.astro'
+import PostTitle from '../components/PostTitle.astro'
+import PostBody from '../components/PostBody.astro'
+import BlogPostsLink from '../components/BlogPostsLink.astro'
+import BlogTagsLink from '../components/BlogTagsLink.astro'
+import styles from '../styles/blog.module.css'
+import PostFeaturedImage from '../components/PostFeaturedImage.astro'
+import SearchButton from '../components/SearchButton.astro'
+
+const slug = "about";
+
+const post = await getPostBySlug(slug)
+if (!post) {
+  throw new Error('Post not found. slug: ${slug}')
+}
+
+const [blocks, allPosts, rankedPosts, recentPosts, tags, postsHavingSameTag] =
+  await Promise.all([
+    getAllBlocksByBlockId(post.PageId),
+    getAllPosts(),
+    getRankedPosts(),
+    getPosts(5),
+    getAllTags(),
+    getPostsByTag(post.Tags[0]?.name, 6),
+  ])
+
+const currentPostIndex = allPosts.findIndex((post) => post.Slug === slug)
+
+let ogImage = ''
+if (post.FeaturedImage && post.FeaturedImage.Url) {
+  ogImage = new URL(filePath(new URL(post.FeaturedImage.Url)), Astro.site)
+}
+---
+
+<Layout
+  title={post.Title}
+  description={post.Excerpt}
+  path={getPostLink(post.Slug)}
+  ogImage={ogImage}
+>
+  <div slot="main" class={styles.main}>
+    <div class={styles.post}>
+      <PostTitle post={post} enableLink={false} />
+      <PostFeaturedImage post={post} />
+      <PostBody blocks={blocks} />
+    </div>
+  </div>
+
+  <div slot="aside" class="aside">
+    <SearchButton />
+    <BlogPostsLink heading="おすすめ記事" posts={rankedPosts} />
+    <BlogPostsLink heading="最近の記事" posts={recentPosts} />
+    <BlogTagsLink heading="カテゴリ" tags={tags} />
+  </div>
+</Layout>
