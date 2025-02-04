@@ -1,0 +1,123 @@
+---
+import { getNavLink } from '../lib/blog-helpers.ts'
+
+---
+
+<div class="profile-card">
+  <div class="profile-header">
+    <img src="../../public/favicon.png" alt="たぬきっつぁん" />
+    <div>
+      <p>たぬきっつぁん</p>
+      <a href="https://twitter.com/tanukizzan">@tanukizzan</a>
+    </div>
+  </div>
+  <div class="profile-about">
+    <p>
+      テックが好きな大学生。「ガジェットライフログ」をコンセプトに、ガジェットのある日常を発信しています。
+    </p>
+  </div>
+  <div class="aboutme">
+    <p>About me</p>
+    <svg
+      viewBox="0 0 444 444"
+      version="1.1"
+      xmlns="http://www.w3.org/2000/svg"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      xml:space="preserve"
+      xmlns:serif="http://www.serif.com/"
+      style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"
+    >
+      <g transform="matrix(1,0,0,1,-2492.57,-319.048)">
+        <g id="Artboard2" transform="matrix(1,0,0,1,-0.923135,0)">
+          <rect
+            x="2060.92"
+            y="0"
+            width="1281.61"
+            height="1080"
+            style="fill:none;"></rect>
+          <g
+            id="arrow_right_alt_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg"
+            transform="matrix(18.4673,4.996e-16,-4.996e-16,18.4673,2715.1,540.655)"
+          >
+            <g transform="matrix(1,0,0,1,-12,-12)">
+              <g transform="matrix(1.64124,0,0,1.77929,-9.63138,-9.35153)">
+                <path
+                  d="M15.453,16.547L12.6,16.55L16.15,13L6.36,13L6.36,11L16.15,11L12.6,7.45L15.45,7.45L20,12L15.453,16.547Z"
+                  style="fill-rule:nonzero;"></path>
+              </g>
+            </g>
+          </g>
+        </g>
+      </g>
+    </svg>
+    <a href={getNavLink('/about')}></a>
+  </div>
+</div>
+
+<style>
+  .profile-card {
+    padding: 1rem;
+    backdrop-filter: blur(12px);
+    border: 1px solid #dfdfdf;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 35px;
+    margin: 1em 0;
+    line-height: 1.2;
+  }
+  .profile-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  .profile-header img {
+    width: 4rem;
+    height: auto;
+    margin-right: 1rem;
+    border-radius: 50%;
+  }
+  .profile-header div p {
+    font-size: 1.25rem;
+    font-weight: bold;
+  }
+  .profile-header div p,
+  .profile-header div a {
+    margin: 0;
+  }
+  .profile-header > div > a {
+    color: #1da1f2;
+    text-decoration: none;
+  }
+  .profile-about p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 0;
+  }
+  .aboutme {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(175deg, #333 0%, #0a0a0a 100%);
+    border-radius: 50px;
+    margin-top: 1rem;
+  }
+  .aboutme p {
+    text-align: center;
+    color: #fff;
+    margin: 0;
+    padding: 0.5rem;
+  }
+  .aboutme svg {
+    width: 1.5rem;
+    height: 1.5rem;
+    align-items: center;
+    fill: #fff;
+  }
+  .aboutme a {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+</style>

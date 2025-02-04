@@ -1,4 +1,5 @@
 ---
+import { getPosts, getRankedPosts, getAllTags } from '../lib/notion/client.ts'
 import { PUBLIC_GA_TRACKING_ID, ENABLE_LIGHTBOX } from '../server-constants.ts'
 import { getDatabase } from '../lib/notion/client.ts'
 import { getNavLink, getStaticFilePath, filePath } from '../lib/blog-helpers.ts'
@@ -6,6 +7,9 @@ import '../styles/syntax-coloring.css'
 import GoogleAnalytics from '../components/GoogleAnalytics.astro'
 import SearchModal from '../components/SearchModal.astro'
 import SearchButton from '../components/SearchButton.astro'
+import BlogPostsLink from '../components/BlogPostsLink.astro'
+import BlogTagsLink from '../components/BlogTagsLink.astro'
+import ProfileCard from '../components/ProfileCard.astro'
 import headerImage from '../images/header.webp'
 import logoImage from '../images/monorawg.webp'
 
@@ -18,13 +22,19 @@ export interface Props {
 
 const { title = '', description = '', path = '/', ogImage = '' } = Astro.props
 
+const [rankedPosts, recentPosts, tags] = await Promise.all([
+  getRankedPosts(),
+  getPosts(5),
+  getAllTags(),
+])
+
 const database = await getDatabase()
 
 const siteTitle = title ? `${title} - ${database.Title}` : database.Title
 const siteDescription = description ? description : database.Description
 const siteURL = new URL(getNavLink(path), Astro.site).toString()
 const siteOGImage = new URL(
-  getStaticFilePath('/default-og-image.png'),
+  getStaticFilePath('/default-og-image.jpg'),
   Astro.site
 )
 
@@ -103,6 +113,13 @@ if (database.Icon && database.Icon.Type === 'file') {
         </main>
 
         <aside>
+          <SearchButton />
+          <ProfileCard />
+          <div class="side-links">
+            <BlogPostsLink heading="おすすめ記事" posts={rankedPosts} />
+            <BlogPostsLink heading="最近の記事" posts={recentPosts} />
+            <BlogTagsLink heading="カテゴリ" tags={tags} />
+          </div>
           <slot name="aside" />
         </aside>
       </div>
@@ -150,6 +167,11 @@ if (database.Icon && database.Icon.Type === 'file') {
       grid-auto-flow: row;
     }
   }
+  @media (max-width: 720px) {
+    .container > div {
+      display: block;
+    }
+  }
 
   main {
     min-width: 320px;
@@ -157,26 +179,33 @@ if (database.Icon && database.Icon.Type === 'file') {
     background-color: var(--bg2);
     border-radius: 32px;
   }
-  @media (max-width: 800px) {
-    main {
-      width: 100%;
-    }
-  }
-  @media (max-width: 550px) {
+  @media (max-width: 720px) {
     main {
       border-radius: 0;
     }
   }
+  @media (min-width: 720px) {
+    main {
+      border: 1px solid #dfdfdf;
+    }
+  }
 
   aside {
-    width: 350px;
+    max-width: 350px;
     padding: 1em 0;
   }
   @media (max-width: 1100px) {
     aside {
-      width: 100%;
+      max-width: 720px;
       padding: 1em;
     }
+  }
+  .side-links {
+    backdrop-filter: blur(12px);
+    border: 1px solid #dfdfdf;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 35px;
+    padding: 1rem;
   }
 
   .cover {
@@ -232,10 +261,16 @@ if (database.Icon && database.Icon.Type === 'file') {
     height: 3em;
     width: auto;
   }
-  @media (max-width: 550px) {
+  @media (max-width: 720px) {
     header {
-      height: 30vh;
+      background-image: url('../images/monorawg-bg.webp');
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      height: 20vh;
     }
+  }
+  @media (max-width: 550px) {
     header .logo {
       height: 2.4em;
     }
@@ -249,7 +284,7 @@ if (database.Icon && database.Icon.Type === 'file') {
   }
   @media (max-width: 550px) {
     div.content {
-      padding: 0 2em;
+      padding: 0 2em 2em 2em;
     }
   }
 
@@ -281,7 +316,7 @@ if (database.Icon && database.Icon.Type === 'file') {
     --gap-double: 2rem;
 
     --bg: #f0f0f0;
-    --bg2: #fafafa;
+    --bg2: #fcfcfc;
     --fg: #333;
     --accents-1: #666;
     --accents-2: #666;
@@ -308,6 +343,7 @@ if (database.Icon && database.Icon.Type === 'file') {
     padding: 0;
     margin: 0;
     font-size: 18px;
+    line-height: 2;
   }
 
   body {
@@ -324,7 +360,10 @@ if (database.Icon && database.Icon.Type === 'file') {
       25px 25px; */
     background-attachment: fixed;
     /* background-size: 50px 50px; */
-    background-image: url('../images/grain-bg.webp');
+    background-image: url('../images/monorawg-bg.webp');
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
 
     /* Hack */
     overflow-x: hidden;
