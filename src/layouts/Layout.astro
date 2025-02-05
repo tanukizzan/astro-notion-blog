@@ -1,10 +1,11 @@
 ---
 import { getPosts, getRankedPosts, getAllTags } from '../lib/notion/client.ts'
-import { PUBLIC_GA_TRACKING_ID, ENABLE_LIGHTBOX } from '../server-constants.ts'
+import { PUBLIC_GA_TRACKING_ID, PUBLIC_GOOGLE_ADS_PUBLISHER_ID, ENABLE_LIGHTBOX } from '../server-constants.ts'
 import { getDatabase } from '../lib/notion/client.ts'
 import { getNavLink, getStaticFilePath, filePath } from '../lib/blog-helpers.ts'
 import '../styles/syntax-coloring.css'
 import GoogleAnalytics from '../components/GoogleAnalytics.astro'
+import GoogleAdsense from '../components/GoogleAdsense.astro'
 import SearchModal from '../components/SearchModal.astro'
 import SearchButton from '../components/SearchButton.astro'
 import BlogPostsLink from '../components/BlogPostsLink.astro'
@@ -93,7 +94,6 @@ if (database.Icon && database.Icon.Type === 'file') {
     <script type="text/javascript" src="//mlb.valuecommerce.com/mylinkbox.js" async></script>
   </head>
   <body>
-    <GoogleAnalytics trackingId={PUBLIC_GA_TRACKING_ID} />
     <div class="container">
 
       <header>
@@ -144,6 +144,8 @@ if (database.Icon && database.Icon.Type === 'file') {
         <script src={getStaticFilePath('/scripts/fslightbox.js')} />
       )
     }
+    <GoogleAnalytics trackingId={PUBLIC_GA_TRACKING_ID} />
+    <GoogleAdsense trackingId={PUBLIC_GOOGLE_ADS_PUBLISHER_ID} />
   </body>
 </html>
 
