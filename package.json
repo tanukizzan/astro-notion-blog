@@ -39,6 +39,7 @@
     "sharp": "^0.33.5"
   },
   "devDependencies": {
+    "@iconify-json/mdi": "^1.2.3",
     "@nrwl/nx-cloud": "^19.1.0",
     "@types/async-retry": "^1.4.9",
     "@types/js-base64": "^3.3.1",
