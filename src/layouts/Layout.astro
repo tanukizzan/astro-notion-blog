@@ -451,4 +451,24 @@ if (database.Icon && database.Icon.Type === 'file') {
     display: flex;
     flex-wrap: wrap;
   }
+  .myLinkModule {
+    padding: 0 !important;
+    margin: 1rem auto !important;
+    border-radius: 3px;
+    border-color: #dfdfdf !important;
+    backdrop-filter: blur(12px);
+    background-image: url('../images/monorawg-bg.webp');
+    background-position: center center;
+    background-size: cover;
+  }
+  .myLinkModule > div {
+    padding: 1.2rem !important;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(4px);
+  }
+  @media (min-width: 600px) {
+    .myLinkModule_image {
+      margin-bottom: 0 !important;
+    }
+  }
 </style>
