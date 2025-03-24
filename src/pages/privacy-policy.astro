@@ -1,12 +1,7 @@
 ---
-import * as interfaces from '../lib/interfaces.ts'
 import {
-  getPosts,
   getAllPosts,
-  getRankedPosts,
   getPostBySlug,
-  getPostsByTag,
-  getAllTags,
   getAllBlocksByBlockId,
 } from '../lib/notion/client.ts'
 import {
@@ -16,11 +11,8 @@ import {
 import Layout from '../layouts/Layout.astro'
 import PostTitle from '../components/PostTitle.astro'
 import PostBody from '../components/PostBody.astro'
-import BlogPostsLink from '../components/BlogPostsLink.astro'
-import BlogTagsLink from '../components/BlogTagsLink.astro'
 import styles from '../styles/blog.module.css'
 import PostFeaturedImage from '../components/PostFeaturedImage.astro'
-import SearchButton from '../components/SearchButton.astro'
 
 const slug = "privacy-policy";
 
@@ -29,14 +21,10 @@ if (!post) {
   throw new Error('Post not found. slug: ${slug}')
 }
 
-const [blocks, allPosts, rankedPosts, recentPosts, tags, postsHavingSameTag] =
+const [blocks, allPosts] =
   await Promise.all([
     getAllBlocksByBlockId(post.PageId),
     getAllPosts(),
-    getRankedPosts(),
-    getPosts(5),
-    getAllTags(),
-    getPostsByTag(post.Tags[0]?.name, 6),
   ])
 
 const currentPostIndex = allPosts.findIndex((post) => post.Slug === slug)
@@ -55,16 +43,22 @@ if (post.FeaturedImage && post.FeaturedImage.Url) {
 >
   <div slot="main" class={styles.main}>
     <div class={styles.post}>
-      <PostTitle post={post} enableLink={false} />
+      <div class="page-title">
+        <PostTitle post={post} enableLink={false} />
+      </div>
       <PostFeaturedImage post={post} />
       <PostBody blocks={blocks} />
     </div>
   </div>
-
-  <div slot="aside" class="aside">
-    <SearchButton />
-    <BlogPostsLink heading="おすすめ記事" posts={rankedPosts} />
-    <BlogPostsLink heading="最近の記事" posts={recentPosts} />
-    <BlogTagsLink heading="カテゴリ" tags={tags} />
-  </div>
 </Layout>
+
+<style>
+  .page-title {
+    padding: 1rem 0;
+  }
+  @media (min-width: 550px) {
+    .page-title {
+      padding-top: 0;
+    }
+  }
+</style>

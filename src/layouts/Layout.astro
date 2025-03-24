@@ -1,12 +1,17 @@
 ---
-import { PUBLIC_GA_TRACKING_ID, ENABLE_LIGHTBOX } from '../server-constants.ts'
+import { getPosts, getRankedPosts, getAllTags } from '../lib/notion/client.ts'
+import { PUBLIC_GA_TRACKING_ID, PUBLIC_GOOGLE_ADS_PUBLISHER_ID, ENABLE_LIGHTBOX } from '../server-constants.ts'
 import { getDatabase } from '../lib/notion/client.ts'
 import { getNavLink, getStaticFilePath, filePath } from '../lib/blog-helpers.ts'
 import '../styles/syntax-coloring.css'
 import GoogleAnalytics from '../components/GoogleAnalytics.astro'
+import GoogleAdsense from '../components/GoogleAdsense.astro'
 import SearchModal from '../components/SearchModal.astro'
 import SearchButton from '../components/SearchButton.astro'
-import headerImage from '../images/header.webp'
+import BlogPostsLink from '../components/BlogPostsLink.astro'
+import BlogTagsLink from '../components/BlogTagsLink.astro'
+import ProfileCard from '../components/ProfileCard.astro'
+import SidebarAds from '../components/SidebarAds.astro'
 import logoImage from '../images/monorawg.webp'
 
 export interface Props {
@@ -18,13 +23,19 @@ export interface Props {
 
 const { title = '', description = '', path = '/', ogImage = '' } = Astro.props
 
+const [rankedPosts, recentPosts, tags] = await Promise.all([
+  getRankedPosts(),
+  getPosts(5),
+  getAllTags(),
+])
+
 const database = await getDatabase()
 
-const siteTitle = title ? `${title} - ${database.Title}` : database.Title
+const siteTitle = title ? `${title} | ${database.Title}` : database.Title
 const siteDescription = description ? description : database.Description
 const siteURL = new URL(getNavLink(path), Astro.site).toString()
 const siteOGImage = new URL(
-  getStaticFilePath('/default-og-image.png'),
+  getStaticFilePath('/default-og-image.webp'),
   Astro.site
 )
 
@@ -35,8 +46,8 @@ if (database.Cover) {
   } else if (database.Cover.Type === 'file') {
     try {
       coverImageURL = filePath(new URL(database.Cover.Url))
-    } catch (err) {
-      console.log('Invalid DB cover image URL')
+    } catch {
+      console.log('Invalid DB cover image URL: ', database.Cover?.Url)
     }
   }
 }
@@ -45,8 +56,8 @@ let customIconURL: string
 if (database.Icon && database.Icon.Type === 'file') {
   try {
     customIconURL = filePath(new URL(database.Icon.Url))
-  } catch (err) {
-    console.log('Invalid DB custom icon URL')
+  } catch {
+    console.log('Invalid DB custom icon URL: ', database.Icon?.Url)
   }
 }
 ---
@@ -70,7 +81,7 @@ if (database.Icon && database.Icon.Type === 'file') {
     <meta name="twitter:description" content={siteDescription} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content={ogImage || siteOGImage} />
-    <link rel="icon" href={getStaticFilePath('/favicon.png')} />
+    <link rel="icon" href={getStaticFilePath('/favicon.webp')} />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css"
@@ -81,13 +92,10 @@ if (database.Icon && database.Icon.Type === 'file') {
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=label"
     />
+    <script type="text/javascript" src="//mlb.valuecommerce.com/mylinkbox.js" async></script>
   </head>
   <body>
-    <GoogleAnalytics trackingId={PUBLIC_GA_TRACKING_ID} />
     <div class="container">
-      <!-- <div class="cover">
-         <div class="headerImage"></div>
-      </div> -->
 
       <header>
         <a href={getNavLink('/')}>
@@ -103,6 +111,14 @@ if (database.Icon && database.Icon.Type === 'file') {
         </main>
 
         <aside>
+          <SearchButton />
+          <ProfileCard />
+          <div class="side-links">
+            <BlogPostsLink heading="おすすめ記事" posts={rankedPosts} />
+            <BlogPostsLink heading="最近の記事" posts={recentPosts} />
+            <BlogTagsLink heading="カテゴリ" tags={tags} />
+          </div>
+          <SidebarAds trackingId={PUBLIC_GOOGLE_ADS_PUBLISHER_ID} />
           <slot name="aside" />
         </aside>
       </div>
@@ -130,6 +146,8 @@ if (database.Icon && database.Icon.Type === 'file') {
         <script src={getStaticFilePath('/scripts/fslightbox.js')} />
       )
     }
+    <GoogleAnalytics trackingId={PUBLIC_GA_TRACKING_ID} />
+    <GoogleAdsense trackingId={PUBLIC_GOOGLE_ADS_PUBLISHER_ID} />
   </body>
 </html>
 
@@ -150,6 +168,11 @@ if (database.Icon && database.Icon.Type === 'file') {
       grid-auto-flow: row;
     }
   }
+  @media (max-width: 720px) {
+    .container > div {
+      display: block;
+    }
+  }
 
   main {
     min-width: 320px;
@@ -157,65 +180,35 @@ if (database.Icon && database.Icon.Type === 'file') {
     background-color: var(--bg2);
     border-radius: 32px;
   }
-  @media (max-width: 800px) {
-    main {
-      width: 100%;
-    }
-  }
-  @media (max-width: 550px) {
+  @media (max-width: 720px) {
     main {
       border-radius: 0;
     }
   }
-
-  aside {
-    width: 350px;
-    padding: 1em 0;
-  }
-  @media (max-width: 1100px) {
-    aside {
-      width: 100%;
-      padding: 1em;
+  @media (min-width: 720px) {
+    main {
+      border: 1px solid #dfdfdf;
     }
   }
 
-  .cover {
-    position: relative;
+  aside {
+    max-width: 350px;
+    padding: 0 0 1em 0;
   }
-  /* .cover::before {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    background: linear-gradient(0deg, #f0f0f0, transparent 50%, transparent);
-  } */
-  .cover .headerImage {
-    background: linear-gradient(
-        to bottom,
-        rgba(240, 240, 240, 0),
-        rgba(240, 240, 240, 0.595) 50%,
-        rgba(240, 240, 240, 0.7225) 65%,
-        rgba(240, 240, 240, 0.78625) 75.5%,
-        rgba(240, 240, 240, 0.81855) 82.85%,
-        rgba(240, 240, 240, 0.83385) 88%,
-        rgba(240, 240, 240, 0.88) 92%,
-        rgba(240, 240, 240, 0.94) 96.5%,
-        rgba(240, 240, 240, 1)
-      ),
-      url('../images/header.webp');
-    background-size: cover;
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: block;
-    width: 100%;
-    height: 70vh;
-    object-fit: cover;
-    object-position: center 60%;
-    z-index: -10;
+  @media (max-width: 1100px) {
+    aside {
+      max-width: 720px;
+      padding: 1em;
+    }
   }
+  .side-links {
+    backdrop-filter: blur(12px);
+    border: 1px solid #dfdfdf;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 35px;
+    padding: 1rem;
+  }
+
   header {
     position: relative;
     height: 40vh;
@@ -229,13 +222,22 @@ if (database.Icon && database.Icon.Type === 'file') {
     transform: translate(-50%, -50%);
     margin: 0;
     padding: 0;
-    height: 3em;
+    height: 4em;
     width: auto;
   }
-  @media (max-width: 550px) {
+  @media (max-width: 720px) {
     header {
-      height: 30vh;
+      background-image: url('../images/monorawg-bg.webp');
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      height: 20vh;
     }
+    header .logo {
+      height: 3.2em;
+    }
+  }
+  @media (max-width: 550px) {
     header .logo {
       height: 2.4em;
     }
@@ -249,7 +251,7 @@ if (database.Icon && database.Icon.Type === 'file') {
   }
   @media (max-width: 550px) {
     div.content {
-      padding: 0 2em;
+      padding: 0 2em 2em 2em;
     }
   }
 
@@ -281,7 +283,7 @@ if (database.Icon && database.Icon.Type === 'file') {
     --gap-double: 2rem;
 
     --bg: #f0f0f0;
-    --bg2: #fafafa;
+    --bg2: #fcfcfc;
     --fg: #333;
     --accents-1: #666;
     --accents-2: #666;
@@ -307,16 +309,22 @@ if (database.Icon && database.Icon.Type === 'file') {
   body {
     padding: 0;
     margin: 0;
-    font-size: 18px;
+    font-size: 16px;
+    line-height: 1.8;
   }
-
+  @media (min-width: 720px) {
+    html,
+    body {
+      font-size: 18px;
+    }
+  }
   body {
+    position: relative;
     min-height: 100vh;
     background: var(--bg);
     color: var(--fg);
     font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN',
       'Hiragino Sans', Meiryo, sans-serif;
-    background-attachment: fixed;
 
     /* Hack */
     overflow-x: hidden;
@@ -333,11 +341,28 @@ if (database.Icon && database.Icon.Type === 'file') {
     width: 100%;
     height: 100vh;
     background: rgba(255, 255, 255, 0.5);
-    z-index: -1;
+    z-index: -2;
     background-image: url('../images/monorawg-bg.webp');
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
+  }
+  body::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    backdrop-filter: blur(0);
+    -webkit-backdrop-filter: blur(0);
+    transition: backdrop-filter .8s ease, -webkit-backdrop-filter .8s ease;
+  }
+  body.scrolled::after {
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
   }
 
   figure {
@@ -446,4 +471,39 @@ if (database.Icon && database.Icon.Type === 'file') {
     display: flex;
     flex-wrap: wrap;
   }
+  .myLinkModule {
+    padding: 0 !important;
+    margin: 1rem auto !important;
+    border-radius: 3px;
+    border-color: #dfdfdf !important;
+    backdrop-filter: blur(12px);
+    background-image: url('../images/monorawg-bg.webp');
+    background-position: center center;
+    background-size: cover;
+  }
+  .myLinkModule > div {
+    padding: 1.2rem !important;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(4px);
+  }
+  @media (min-width: 600px) {
+    .myLinkModule_image {
+      margin-bottom: 0 !important;
+    }
+  }
 </style>
+
+<script>
+  // スクロールイベントを検知してクラスを追加
+  window.addEventListener('scroll', () => {
+    const scrollPosition = window.scrollY;
+    const windowHeight = window.innerHeight;
+    
+    // 画面の20%スクロールしたらblurを適用
+    if (scrollPosition > windowHeight * 0.2) {
+      document.body.classList.add('scrolled');
+    } else {
+      document.body.classList.remove('scrolled');
+    }
+  });
+</script>

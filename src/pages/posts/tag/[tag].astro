@@ -2,9 +2,7 @@
 import type { SelectProperty } from '../../../lib/interfaces.ts'
 import { NUMBER_OF_POSTS_PER_PAGE } from '../../../server-constants.ts'
 import {
-  getPosts,
   getPostsByTag,
-  getRankedPosts,
   getAllTags,
   getNumberOfPagesByTag,
 } from '../../../lib/notion/client.ts'
@@ -18,8 +16,6 @@ import PostFeaturedImage from '../../../components/PostFeaturedImage.astro'
 import PostExcerpt from '../../../components/PostExcerpt.astro'
 import ReadMoreLink from '../../../components/ReadMoreLink.astro'
 import Pagination from '../../../components/Pagination.astro'
-import BlogPostsLink from '../../../components/BlogPostsLink.astro'
-import BlogTagsLink from '../../../components/BlogTagsLink.astro'
 import styles from '../../../styles/blog.module.css'
 import '../../../styles/notion-color.css'
 
@@ -30,11 +26,8 @@ export async function getStaticPaths() {
 
 const { tag } = Astro.params
 
-const [posts, rankedPosts, recentPosts, tags, numberOfPages] = await Promise.all([
+const [posts, numberOfPages] = await Promise.all([
   getPostsByTag(tag, NUMBER_OF_POSTS_PER_PAGE),
-  getRankedPosts(),
-  getPosts(5),
-  getAllTags(),
   getNumberOfPagesByTag(tag),
 ])
 
@@ -73,12 +66,6 @@ const currentTag = posts[0].Tags.find((t) => t.name === tag)
       <Pagination tag={tag} currentPage={1} numberOfPages={numberOfPages} />
     </footer>
   </div>
-
-  <div slot="aside" class={styles.aside}>
-    <BlogPostsLink heading="おすすめ記事" posts={rankedPosts} />
-    <BlogPostsLink heading="最近の記事" posts={recentPosts} />
-    <BlogTagsLink heading="カテゴリ" tags={tags} />
-  </div>
 </Layout>
 
 <style>
@@ -90,6 +77,7 @@ const currentTag = posts[0].Tags.find((t) => t.name === tag)
   }
   @media (max-width: 640px) {
     .tag-container {
+      padding-top: 1rem;
       font-size: 1.15rem;
     }
   }

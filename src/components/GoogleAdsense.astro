@@ -1,0 +1,20 @@
+---
+export interface Props {
+  trackingId: string
+}
+
+const { trackingId = '' } = Astro.props
+---
+
+{
+  trackingId && (
+    <>
+      <script
+        is:inline
+        async
+        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${trackingId}`}
+        crossorigin="anonymous"
+      />
+    </>
+  )
+}

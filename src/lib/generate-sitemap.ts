@@ -14,7 +14,7 @@ type SitemapItem = {
     const itemsStr = items
       .map(
         ({ loc, lastmod }) =>
-          `<url><loc>${loc}</loc><lastmod>${formatDate(lastmod)}</lastmod></url>`
+          `<url><loc>${loc}/</loc><lastmod>${formatDate(lastmod)}</lastmod></url>`
       )
       .join('')
   
