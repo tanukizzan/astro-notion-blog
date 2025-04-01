@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "astro dev",
+    "devh": "astro dev --host",
     "start": "astro dev",
     "build": "astro build",
     "build:cached": "npm run cache:fetch && astro build",
