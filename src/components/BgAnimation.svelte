@@ -1,7 +1,7 @@
 <script>
   import { onMount } from 'svelte';
-  import { gsap } from 'gsap';
-  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  import gsap from 'gsap';
+  import ScrollTrigger from 'gsap/ScrollTrigger';
   
   gsap.registerPlugin(ScrollTrigger);
 
@@ -16,7 +16,7 @@
       scrollTrigger: {
         trigger: 'body',
         start: 'top top',
-        end: '1000px',
+        end: '1200px',
         scrub: true,
         markers: false,
       },
