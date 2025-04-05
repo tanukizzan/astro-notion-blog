@@ -18,7 +18,7 @@
         start: 'top top',
         end: '1000px',
         scrub: true,
-        markers: true,
+        markers: false,
       },
     });
     tl.to('.background-container', {
