@@ -1,5 +1,5 @@
 ---
-import { Post } from '../lib/interfaces.ts'
+import type { Post } from '../lib/interfaces.ts'
 import { getNavLink, getPostLink } from '../lib/blog-helpers.ts'
 import PostTags from './PostTags.astro'
 
@@ -12,22 +12,22 @@ const { prevPost, nextPost } = Astro.props
 ---
 
 <div class="post-relative-link">
-  <div>
+  <div class="prev-post">
     {
       prevPost && (
         <a href={getPostLink(prevPost.Slug)} class="colored">
-          <div>◀ Previous</div>
-          <div>{prevPost.Title}</div>
+          <span>◀ 前の記事</span>
+          <p>{prevPost.Title}</p>
         </a>
       )
     }
   </div>
-  <div>
+  <div class="next-post">
     {
       nextPost && (
         <a href={getPostLink(nextPost.Slug)} class="colored next">
-          <div>Next ▶</div>
-          <div>{nextPost.Title}</div>
+          <span>次の記事 ▶</span>
+          <p>{nextPost.Title}</p>
         </a>
       )
     }
@@ -37,49 +37,52 @@ const { prevPost, nextPost } = Astro.props
 <style>
   div.post-relative-link {
     display: flex;
-    margin-top: 1rem;
+    margin: 1rem 0;
   }
   div.post-relative-link > div {
     flex: 1;
     display: block;
-    margin-top: 0.6rem;
+    border: solid #eeeeee;
+  }
+  div.post-relative-link > .prev-post {
+    text-align: left;
+    border-width: 2px 1px 2px 2px;
+    border-radius: 35px 0 0 35px;
+  }
+  div.post-relative-link > .next-post {
+    text-align: right;
+    border-width: 2px 2px 2px 1px;
+    border-radius: 0 35px 35px 0;
   }
   div.post-relative-link > div > a {
     display: block;
-    text-align: center;
-    line-height: 1.2rem;
     font-size: 0.95rem;
-  }
-  div.post-relative-link > div > a.text {
-    margin-top: 1rem;
-    padding: 0.5rem;
-    color: inherit;
-    font-size: 1rem;
-    text-decoration: underline;
-    font-weight: 500;
-  }
-  div.post-relative-link > div > a.colored {
-    padding: 1rem;
-    border-radius: var(--radius);
+    padding: 1.2rem;
     color: var(--fg);
-    transition: 0.2s ease;
+    transition: .2s;
   }
-  div.post-relative-link > div > a.colored:hover {
+  div.post-relative-link > div > a:hover {
     opacity: 0.6;
   }
-  div.post-relative-link > div > a.colored > div:first-child {
-    width: auto;
-    text-align: left;
-    font-size: 0.85rem;
+  div.post-relative-link > div > a > span {
+    font-size: 0.9em;
   }
-  div.post-relative-link > div > a.colored > div:nth-child(2) {
-    width: auto;
-    padding: 0.2rem 0 0.4rem;
-    text-align: left;
-    font-size: 1rem;
+  div.post-relative-link > div > a > p {
     font-weight: bold;
+    line-height: 1.3;
+    margin: 0.4rem 0 0 0;
   }
-  div.post-relative-link > div > a.next > div:first-child {
-    text-align: right !important;
+  @media (max-width: 720px) {
+    div.post-relative-link {
+      flex-direction: column;
+    }
+    div.post-relative-link > .prev-post {
+      border-width: 2px 2px 1px 2px;
+      border-radius: 35px 35px 0 0;
+    }
+    div.post-relative-link > .next-post {
+      border-width: 1px 2px 2px 2px;
+      border-radius: 0 0 35px 35px;
+    }
   }
 </style>
