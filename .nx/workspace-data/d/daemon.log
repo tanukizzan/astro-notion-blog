@@ -1,0 +1,11 @@
+[NX Daemon Server] - 2025-02-04T00:59:04.661Z - Started listening on: \\.\pipe\nx\C:\Users\Soichiro\AppData\Local\Temp\14d960608a28610228c4\d.sock
+[NX Daemon Server] - 2025-02-04T00:59:04.665Z - [WATCHER]: Subscribed to changes within: C:\Users\Soichiro\workspace\astro-notion-blog (native)
+[NX Daemon Server] - 2025-02-04T00:59:04.673Z - Established a connection. Number of open connections: 1
+[NX Daemon Server] - 2025-02-04T00:59:04.676Z - Closed a connection. Number of open connections: 0
+[NX Daemon Server] - 2025-02-04T00:59:04.677Z - Established a connection. Number of open connections: 1
+[NX Daemon Server] - 2025-02-04T00:59:04.680Z - [REQUEST]: Responding to the client. Shutdown initiated
+[NX Daemon Server] - 2025-02-04T00:59:04.682Z - Done responding to the client Shutdown initiated
+[NX Daemon Server] - 2025-02-04T00:59:04.683Z - Handled FORCE_SHUTDOWN. Handling time: 0. Response time: 3.
+[NX Daemon Server] - 2025-02-04T00:59:04.684Z - Closed a connection. Number of open connections: 0
+[NX Daemon Server] - 2025-02-04T00:59:04.684Z - [WATCHER]: Stopping the watcher for C:\Users\Soichiro\workspace\astro-notion-blog (sources)
+[NX Daemon Server] - 2025-02-04T00:59:04.684Z - [WATCHER]: Stopping the watcher for C:\Users\Soichiro\workspace\astro-notion-blog (outputs)
