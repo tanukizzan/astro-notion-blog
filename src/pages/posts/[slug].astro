@@ -107,7 +107,7 @@ if (post.FeaturedImage && post.FeaturedImage.Url) {
       <PostFeaturedImage post={post} />
       <PostBody blocks={blocks} />
 
-      <footer>
+      <section>
         <PostRelativeLink prevPost={prevPost} nextPost={nextPost} />
         <BlogPostsLink
           heading="関連記事"
@@ -115,7 +115,7 @@ if (post.FeaturedImage && post.FeaturedImage.Url) {
             (p: interfaces.Post) => p.Slug !== post.Slug
           )}
         />
-      </footer>
+      </section>
     </div>
   </div>
 </Layout>
