@@ -44,6 +44,6 @@ export default defineConfig({
     CustomIconDownloader(),
     FeaturedImageDownloader(),
     PublicNotionCopier(),
-    svelte()
+    svelte(),
   ],
 });
