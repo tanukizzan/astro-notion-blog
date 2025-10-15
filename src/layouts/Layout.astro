@@ -12,6 +12,7 @@ import BlogPostsLink from '../components/BlogPostsLink.astro'
 import BlogTagsLink from '../components/BlogTagsLink.astro'
 import ProfileCard from '../components/ProfileCard.astro'
 import SidebarAds from '../components/SidebarAds.astro'
+import SidebarAdsSelfPosted from '../components/SidebarAdsSelfPosted.astro'
 import logoImage from '../images/monorawg.webp'
 import BgAnimation from '../components/BgAnimation.svelte'
 
@@ -54,7 +55,7 @@ if (database.Cover) {
 }
 
 let customIconURL: string
-if (database.Icon && database.Icon.Type === 'file') {
+if (database.Icon && 'Url' in database.Icon) {
   try {
     customIconURL = filePath(new URL(database.Icon.Url))
   } catch {
@@ -119,6 +120,7 @@ if (database.Icon && database.Icon.Type === 'file') {
             <BlogPostsLink heading="最近の記事" posts={recentPosts} />
             <BlogTagsLink heading="カテゴリ" tags={tags} />
           </div>
+          <SidebarAdsSelfPosted />
           <SidebarAds trackingId={PUBLIC_GOOGLE_ADS_PUBLISHER_ID} />
           <slot name="aside" />
         </aside>
